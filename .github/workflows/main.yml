@@ -1,21 +1,41 @@
 name: Python
 
+# when execute
 on: workflow_dispatch
+# when push event
+# push:
+#   branches:
+#     - main
+# daily execute
+# schedule:
+# - cron: "0 0 * * *"
 
+# what execute
 jobs:
+  # job name
   build:
-
+    # execute env
     runs-on: ubuntu-latest
+    
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-
+    # execute sequence
     steps:
       - uses: actions/checkout@v3
+      # Set up
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      # Display
       - name: Display Python version
-        run: python -c "import sys; print(sys.version)" > python_version_${{ matrix.python-version }}.txt
+        run: python -c "import sys; print(sys.version)" > \
+             python_version_${{ matrix.python-version }}.txt
+      # Upload
+      - name: Upload Python version
+      	uses: actions/upload-artifact@v1
+      	with:
+      	  name: ${{ matrix.python-version }}
+      	  path: python_version_${{ matrix.python-version }}.txt
 
